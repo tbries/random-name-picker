@@ -2,7 +2,7 @@
   "name": "Random Name Picker for Lucky Draw",
   "short_name": "Random Name Picker",
   "description": "Simple HTML5 random name picker for picking lucky draw winner using Web Animations API",
-  "start_url": "./",
+  "start_url": "/random-name-picker/",
   "display": "standalone",
   "background_color": "#f20c49",
   "theme_color": "#f20c49",

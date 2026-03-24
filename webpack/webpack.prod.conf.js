@@ -33,6 +33,7 @@ module.exports = merge(baseWebpackConfig, {
   stats: 'errors-only',
   bail: true,
   output: {
+    publicPath: process.env.APP_CONTEXT || '/',
     filename: 'assets/js/[name].[chunkhash:8].js',
     chunkFilename: 'assets/js/[name].[chunkhash:8].chunk.js'
   },
