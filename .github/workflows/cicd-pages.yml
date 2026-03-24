@@ -49,21 +49,17 @@ jobs:
         with:
           script: |
             const fs = require('fs')
-            await github.paginate(github.rest.issues.listComments,
-              { owner: context.repo.owner, repo: context.repo.repo, issue_number: ${{ env.ISSUE_ID }} },
-              (response) => response.data.map((issuecomment) => issuecomment.user.login)
+            const comments = await github.paginate(github.rest.issues.listComments,
+              { owner: context.repo.owner, repo: context.repo.repo, issue_number: ${{ env.ISSUE_ID }} }
             )
-            .then((commenters) => {
-              const unique = Array.from(new Set(commenters)) 
-              const content = unique.join('\n')
-              fs.writeFile('dist/names.txt', content, err => {
-                if (err) {
-                  console.error(err);
-                }
-                // file written successfully
-                console.log(unique.length + ' entries added, (' + (commenters.length - unique.length) + ' duplicates removed)')
-              });
-            }); 
+            const names = comments.flatMap(comment =>
+              (comment.body || '').split('\n')
+                .map(line => line.trim())
+                .filter(line => line.length > 0 && !line.startsWith('#'))
+            )
+            const content = names.join('\n')
+            fs.writeFileSync('dist/names.txt', content)
+            console.log(`${names.length} names added from ${comments.length} comments`)
             
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
